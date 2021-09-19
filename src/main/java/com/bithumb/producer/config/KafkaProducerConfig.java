@@ -1,5 +1,6 @@
 package com.bithumb.producer.config;
 
+import com.bithumb.websocket.domain.Quote;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,7 @@ public class KafkaProducerConfig {
 //    }
 
     @Bean
-    public KafkaTemplate<String, ?> kafkaTemplate() {
+    public KafkaTemplate<String, Quote> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
