@@ -7,4 +7,5 @@ import java.util.Set;
 @Component
 public interface CoinService {
     public String[] getQuote();
+
 }

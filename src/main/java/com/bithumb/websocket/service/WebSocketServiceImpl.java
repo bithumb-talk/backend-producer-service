@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,11 @@ public class WebSocketServiceImpl implements WebSocketService{
     private final KafkaTemplate<String, Quote> kafkaTemplate;
     @Autowired
     private final CoinServiceImpl coinService;
+    @Autowired
+    private final RedisTemplate redisTemplate;
     public void start(){
         WebSocketClient client = new WebSocketClient();
-        QuoteSocket socket = new QuoteSocket(kafkaTemplate, coinService);
+        QuoteSocket socket = new QuoteSocket(kafkaTemplate, coinService,redisTemplate);
 
         try{
             client.start();

@@ -22,10 +22,6 @@ public class KafkaProducerConfig {
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonSerializer.class);
         return new DefaultKafkaProducerFactory(config);
     }
-//    @Bean
-//    public KafkaTemplate<String, User> kafkaTemplate() {
-//        return new KafkaTemplate<>(producerFactory());
-//    }
 
     @Bean
     public KafkaTemplate<String, Quote> kafkaTemplate() {

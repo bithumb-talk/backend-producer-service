@@ -15,8 +15,13 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -28,7 +33,9 @@ import java.util.concurrent.TimeUnit;
 public class QuoteSocket {
     private final KafkaTemplate<String, Quote> kafkaTemplate;
     private final CoinServiceImpl coinService;
-    private static final String TOPIC = "kafka-spring-producer-coin-test2";
+    private final RedisTemplate redisTemplate;
+
+    private static final String TOPIC = "kafka-spring-producer-coin-test3";
 
     private final CountDownLatch closeLatch = new CountDownLatch(1);;
 
@@ -71,18 +78,19 @@ public class QuoteSocket {
     }
 
     @OnWebSocketMessage
-    public void onMessage(String msg) throws JsonProcessingException, ParseException {
+    public void onMessage(String msg) throws JsonProcessingException, ParseException, UnsupportedEncodingException {
         ObjectMapper mapper = new ObjectMapper();
-        System.out.printf("Got msg: %s%n",msg);
+//        System.out.printf("Got msg: %s%n",msg);
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject)parser.parse(msg);
 
         Set key = obj.keySet();
         if (!key.contains("status")){
             QuoteResponseDto quote = mapper.readValue(msg, QuoteResponseDto.class);
-            quote.getContent().setKorean("비트코인");
-            System.out.println(quote);
-            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(quote));
+            HashOperations operations = redisTemplate.opsForHash();
+            String str = new String((byte[]) operations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
+            quote.getContent().setKorean(str);
+            System.out.println("getContent"+quote.getContent());
             kafkaTemplate.send(TOPIC,quote.getContent());
         }
     }

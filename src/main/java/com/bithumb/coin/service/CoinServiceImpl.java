@@ -3,6 +3,10 @@ package com.bithumb.coin.service;
 import com.bithumb.coin.domain.Coin;
 import com.bithumb.coin.domain.CoinDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,13 +19,16 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class CoinServiceImpl implements CoinService {
+    private final RedisTemplate redisTemplate;
     @Override
     public String[] getQuote() {
         String jsonInString = "";
@@ -42,13 +49,18 @@ public class CoinServiceImpl implements CoinService {
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultMap.getBody());
 
             Coin coin = mapper.readValue(jsonInString, Coin.class);
-//            String obj = mapper.writeValueAsString(coin.getData());
-//            return getValue(obj);
+//            ValueOperations<String, String> operations = redisTemplate.opsForValue();
+            HashOperations operation = redisTemplate.opsForHash();
             int i;
             CoinDetail[] coins = coin.getData();
             String[] str = new String[coins.length];
             for (i=0; i<coins.length;i++){
                 str[i] = coins[i].getMarket();
+//                System.out.println(coins[i].getMarket());
+//                System.out.println(coins[i].getKorean());
+
+                operation.put(coins[i].getMarket(),coins[i].getMarket(),coins[i].getKorean().getBytes(StandardCharsets.UTF_8));
+//                operations.set(coins[i].getMarket(),coins[i].getKorean());
             }
             return str;
 
