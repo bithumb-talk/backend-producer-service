@@ -35,7 +35,7 @@ public class QuoteSocket {
     private final CoinServiceImpl coinService;
     private final RedisTemplate redisTemplate;
 
-    private static final String TOPIC = "kafka-spring-producer-coin-test3";
+    private static final String TOPIC = "kafka-spring-producer-coin-test4";
 
     private final CountDownLatch closeLatch = new CountDownLatch(1);;
 
