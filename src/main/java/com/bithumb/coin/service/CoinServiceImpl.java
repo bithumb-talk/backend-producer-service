@@ -37,7 +37,7 @@ public class CoinServiceImpl implements CoinService {
             HttpHeaders header = new HttpHeaders();
             HttpEntity<?> entity = new HttpEntity<>(header);
 
-            String url = "http://localhost:8080/coins";
+            String url = "http://172.27.0.1:8080/coins";
             UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
 
             ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET,entity, Map.class);

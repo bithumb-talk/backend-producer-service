@@ -80,7 +80,6 @@ public class QuoteSocket {
     @OnWebSocketMessage
     public void onMessage(String msg) throws JsonProcessingException, ParseException, UnsupportedEncodingException {
         ObjectMapper mapper = new ObjectMapper();
-//        System.out.printf("Got msg: %s%n",msg);
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject)parser.parse(msg);
 

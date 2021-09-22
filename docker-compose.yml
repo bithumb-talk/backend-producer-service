@@ -12,3 +12,8 @@ services:
     hostname: redis
     ports:
       - "6379:6370"
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
+networks:
+  default:
+    external:
+      name: bithumb-backend-net
