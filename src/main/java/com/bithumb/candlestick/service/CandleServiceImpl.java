@@ -1,7 +1,7 @@
-package com.bithumb.coin.service;
+package com.bithumb.candlestick.service;
 
-import com.bithumb.coin.domain.Coin;
-import com.bithumb.coin.domain.CoinDetail;
+import com.bithumb.candlestick.controller.dto.CandleDto;
+import com.bithumb.candlestick.domain.Candle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
@@ -23,10 +23,10 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
-public class CoinServiceImpl implements CoinService {
+public class CandleServiceImpl implements CandleService {
     private final RedisTemplate redisTemplate;
     @Override
-    public String[] getQuote() {
+    public CandleDto[] getCandleStick(String symbol, String chart_intervals) {
         String jsonInString = "";
         try {
             HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
@@ -37,24 +37,21 @@ public class CoinServiceImpl implements CoinService {
             HttpHeaders header = new HttpHeaders();
             HttpEntity<?> entity = new HttpEntity<>(header);
 
-            String url = "http://localhost:8080/coins";
+            String url = "https://api.bithumb.com/public/candlestick/"+symbol+"_KRW/"+chart_intervals;
             UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
 
             ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET,entity, Map.class);
             ObjectMapper mapper = new ObjectMapper();
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultMap.getBody());
+            String[][] candles = mapper.readValue(jsonInString, Candle.class).getData();
 
-            Coin coin = mapper.readValue(jsonInString, Coin.class);
-            HashOperations operation = redisTemplate.opsForHash();
-            int i;
-            CoinDetail[] coins = coin.getData();
-            String[] str = new String[coins.length];
-            for (i=0; i<coins.length;i++){
-                str[i] = coins[i].getMarket();
-
-                operation.put(coins[i].getMarket(),coins[i].getMarket(),coins[i].getKorean().getBytes(StandardCharsets.UTF_8));
+            CandleDto[] candleDtos = new CandleDto[candles.length];
+            int i=0;
+            for (String[] candle:candles){
+                candleDtos[i] = new CandleDto(candle[0],candle[1],candle[2],candle[3],candle[4],candle[5]);
+                i++;
             }
-            return str;
+            return candleDtos;
 
         }catch (HttpClientErrorException | HttpServerErrorException e) {
             System.out.println(e.toString());
