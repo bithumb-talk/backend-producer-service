@@ -35,7 +35,7 @@ public class QuoteSocket {
     private final CoinServiceImpl coinService;
     private final RedisTemplate redisTemplate;
 
-    private static final String TOPIC = "kafka-spring-producer-coin-test3";
+    private static final String TOPIC = "kafka-spring-producer-coin-test4";
 
     private final CountDownLatch closeLatch = new CountDownLatch(1);;
 
@@ -80,7 +80,6 @@ public class QuoteSocket {
     @OnWebSocketMessage
     public void onMessage(String msg) throws JsonProcessingException, ParseException, UnsupportedEncodingException {
         ObjectMapper mapper = new ObjectMapper();
-//        System.out.printf("Got msg: %s%n",msg);
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject)parser.parse(msg);
 
