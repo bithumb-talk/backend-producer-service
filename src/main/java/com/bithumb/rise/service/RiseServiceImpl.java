@@ -2,14 +2,12 @@ package com.bithumb.rise.service;
 
 import com.bithumb.rise.controller.dto.RiseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 
 import javax.annotation.Resource;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 @RequiredArgsConstructor

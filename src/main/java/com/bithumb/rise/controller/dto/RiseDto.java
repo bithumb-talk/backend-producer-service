@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class RiseDto {
-    private int index;
+    private int rank;
     private String value;
     private Double score;
 }
