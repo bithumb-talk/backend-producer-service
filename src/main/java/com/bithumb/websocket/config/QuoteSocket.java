@@ -18,6 +18,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.UnsupportedEncodingException;
@@ -67,7 +68,7 @@ public class QuoteSocket {
 
             quoteRequest.setSymbols(coinService.getQuote());
             quoteRequest.setTickTypes(new String[]{
-                    "MID"
+                    "24H"
             });
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(quoteRequest);
             fut = session.getRemote().sendStringByFuture(jsonInString);
@@ -82,14 +83,16 @@ public class QuoteSocket {
         ObjectMapper mapper = new ObjectMapper();
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject)parser.parse(msg);
+        HashOperations hashOperations = redisTemplate.opsForHash();
+        ZSetOperations zSetOperations = redisTemplate.opsForZSet();
 
         Set key = obj.keySet();
         if (!key.contains("status")){
             QuoteResponseDto quote = mapper.readValue(msg, QuoteResponseDto.class);
-            HashOperations operations = redisTemplate.opsForHash();
-            String str = new String((byte[]) operations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
+            String str = new String((byte[]) hashOperations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
             quote.getContent().setKorean(str);
             System.out.println("getContent"+quote.getContent());
+            zSetOperations.add("rise",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
             kafkaTemplate.send(TOPIC,quote.getContent());
         }
     }
