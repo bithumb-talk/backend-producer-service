@@ -24,7 +24,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class CandleServiceImpl implements CandleService {
-    private final RedisTemplate redisTemplate;
     @Override
     public CandleDto[] getCandleStick(String symbol, String chart_intervals) {
         String jsonInString = "";
