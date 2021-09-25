@@ -5,6 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface CoinService {
-    public String[] getQuote();
+    public String[] getMarket();
 
 }

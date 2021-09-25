@@ -26,7 +26,7 @@ import java.util.Map;
 public class CoinServiceImpl implements CoinService {
     private final RedisTemplate redisTemplate;
     @Override
-    public String[] getQuote() {
+    public String[] getMarket() {
         String jsonInString = "";
         try {
             HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
