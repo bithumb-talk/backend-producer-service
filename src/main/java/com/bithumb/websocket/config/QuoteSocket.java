@@ -66,7 +66,7 @@ public class QuoteSocket {
             QuoteRequestDto quoteRequest = new QuoteRequestDto();
             quoteRequest.setType("ticker");
 
-            quoteRequest.setSymbols(coinService.getQuote());
+            quoteRequest.setSymbols(coinService.getMarket());
             quoteRequest.setTickTypes(new String[]{
                     "24H"
             });
@@ -91,7 +91,7 @@ public class QuoteSocket {
             QuoteResponseDto quote = mapper.readValue(msg, QuoteResponseDto.class);
             String str = new String((byte[]) hashOperations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
             quote.getContent().setKorean(str);
-            System.out.println("getContent"+quote.getContent());
+//            System.out.println("getContent"+quote.getContent());
             zSetOperations.add("rise",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
             kafkaTemplate.send(TOPIC,quote.getContent());
         }
