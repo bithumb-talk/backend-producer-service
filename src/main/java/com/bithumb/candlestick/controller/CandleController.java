@@ -4,6 +4,7 @@ import com.bithumb.candlestick.service.CandleServiceImpl;
 import com.bithumb.common.response.ApiResponse;
 import com.bithumb.common.response.StatusCode;
 import com.bithumb.common.response.SuccessCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class CandleController {
     private final CandleServiceImpl candleService;
 
     @GetMapping("{symbol}/{chart_intervals}")
-    public ResponseEntity<?> getCandleStick(@PathVariable(value="symbol") String symbol, @PathVariable(value = "chart_intervals")String chart_intervals) {
+    public ResponseEntity<?> getCandleStick(@PathVariable(value="symbol") String symbol, @PathVariable(value = "chart_intervals")String chart_intervals) throws JsonProcessingException {
 
         ApiResponse apiResponse = ApiResponse.responseMessage(StatusCode.SUCCESS,
                 SuccessCode.CANDLESTICK_FINDALL_SUCCESS.getMessage());

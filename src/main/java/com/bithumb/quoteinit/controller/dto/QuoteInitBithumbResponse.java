@@ -1,7 +1,6 @@
-package com.bithumb.candlestick.domain;
+package com.bithumb.quoteinit.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +10,10 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@NoArgsConstructor @ToString
+@NoArgsConstructor
+@ToString
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Candle {
-    private String[][] data;
+public class QuoteInitBithumbResponse {
+    private String status;
+    private Object data;
 }

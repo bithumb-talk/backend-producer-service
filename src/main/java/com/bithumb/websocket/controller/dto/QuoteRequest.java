@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor @NoArgsConstructor
 @Data
-public class QuoteRequestDto {
+public class QuoteRequest {
     private String type;
     private String[] symbols;
     private String[] tickTypes;

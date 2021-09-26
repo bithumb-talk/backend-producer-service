@@ -1,4 +1,4 @@
-package com.bithumb.producer.config;
+package com.bithumb.config;
 
 import com.bithumb.websocket.domain.Quote;
 import org.apache.kafka.clients.producer.ProducerConfig;

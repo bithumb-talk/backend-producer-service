@@ -2,6 +2,7 @@ package com.bithumb.coin.service;
 
 import com.bithumb.coin.domain.Coin;
 import com.bithumb.coin.domain.CoinDetail;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
@@ -26,25 +27,24 @@ import java.util.Map;
 public class CoinServiceImpl implements CoinService {
     private final RedisTemplate redisTemplate;
     @Override
-    public String[] getMarket() {
+    public String[] getMarket() throws JsonProcessingException {
         String jsonInString = "";
-        try {
-            HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-            factory.setConnectTimeout(5000);
-            factory.setReadTimeout(5000);
-            RestTemplate restTemplate = new RestTemplate(factory);
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(5000);
+        factory.setReadTimeout(5000);
+        RestTemplate restTemplate = new RestTemplate(factory);
 
-            HttpHeaders header = new HttpHeaders();
-            HttpEntity<?> entity = new HttpEntity<>(header);
+        HttpHeaders header = new HttpHeaders();
+        HttpEntity<?> entity = new HttpEntity<>(header);
 
-            String url = "http://172.27.0.1:8080/coins";
-            UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
+        String url = "http://172.27.0.1:8080/coins";
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
 
-            ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET,entity, Map.class);
-            ObjectMapper mapper = new ObjectMapper();
-            jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultMap.getBody());
+        ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET,entity, Map.class);
+        ObjectMapper mapper = new ObjectMapper();
+        jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultMap.getBody());
 
-            Coin coin = mapper.readValue(jsonInString, Coin.class);
+        Coin coin = mapper.readValue(jsonInString, Coin.class);
             HashOperations operation = redisTemplate.opsForHash();
             int i;
             CoinDetail[] coins = coin.getData();
@@ -56,12 +56,5 @@ public class CoinServiceImpl implements CoinService {
             }
             return str;
 
-        }catch (HttpClientErrorException | HttpServerErrorException e) {
-            System.out.println(e.toString());
-
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        return null;
     }
 }

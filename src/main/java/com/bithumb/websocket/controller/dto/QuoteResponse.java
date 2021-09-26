@@ -10,7 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Data
 @ToString
-public class QuoteResponseDto {
+public class QuoteResponse {
     private String type;
     private Quote content;
 }

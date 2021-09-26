@@ -1,6 +1,6 @@
-package com.bithumb.rise.service;
+package com.bithumb.changerate.service;
 
-import com.bithumb.rise.controller.dto.RiseDto;
+import com.bithumb.changerate.controller.dto.SortChangedRateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -12,21 +12,21 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-public class RiseServiceImpl implements RiseService {
+public class RateServiceImpl implements RateService {
     @Resource(name = "redisTemplate")
     private ZSetOperations<String, String> zSetOperations;
     @Override
-    public RiseDto[] getRise(String intervals) {
+    public SortChangedRateResponse[] getRise(String intervals) {
         Set<ZSetOperations.TypedTuple<String>> rankSet= zSetOperations.reverseRangeWithScores("rise",0,-1);
         Iterator<ZSetOperations.TypedTuple<String>> iterator = rankSet.iterator();
-        RiseDto[] riseDtos = new RiseDto[rankSet.size()];
+        SortChangedRateResponse[] riseDtos = new SortChangedRateResponse[rankSet.size()];
         int i;
 
         for (i=0;i< rankSet.size();i++) {
             ZSetOperations.TypedTuple<String> values = iterator.next();
             System.out.println("value = "+values.getValue());
             System.out.println("score = "+values.getScore());
-            riseDtos[i] = new RiseDto(i+1,values.getValue(), values.getScore());
+            riseDtos[i] = new SortChangedRateResponse(i+1,values.getValue(), values.getScore());
         }
         return riseDtos;
     }

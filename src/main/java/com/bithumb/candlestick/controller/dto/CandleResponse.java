@@ -1,4 +1,4 @@
-package com.bithumb.quote_init.controller.dto;
+package com.bithumb.candlestick.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,7 +13,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class QuoteResponseDto {
-    private String status;
-    private Object data;
+public class CandleResponse {
+    private String baseTime;
+    private String openPrice;
+    private String closePrice;
+    private String highPrice;
+    private String lowPrice;
+    private String tradeVolume;
 }
