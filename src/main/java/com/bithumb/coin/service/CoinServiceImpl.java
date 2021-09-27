@@ -22,6 +22,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+
+// CoinService 삭제 후 코인리스트는 S3로 변경 예정
 @RequiredArgsConstructor
 @Service
 public class CoinServiceImpl implements CoinService {

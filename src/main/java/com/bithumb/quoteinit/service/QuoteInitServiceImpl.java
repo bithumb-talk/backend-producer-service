@@ -34,6 +34,7 @@ public class QuoteInitServiceImpl implements QuoteInitService {
 
     @Override
     public QuoteInitResponse[] getQuoteInit() throws JsonProcessingException, UnsupportedEncodingException, ParseException {
+        //S3로 대체
         String[] markets = coinService.getMarket();
 
         String jsonInString = "";

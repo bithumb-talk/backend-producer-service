@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.*;
 @Api
 @CrossOrigin(origins = "*", allowCredentials = "false")
 @RestController
-@RequestMapping("/rise")
+@RequestMapping("/changerate")
 @RequiredArgsConstructor
 public class RateController {
     private final RateServiceImpl riseService;
 
-    @GetMapping("{intervals}")
-    public ResponseEntity<?> getRiseCoin(@PathVariable(value = "intervals") String intervals) {
+    @GetMapping
+    public ResponseEntity<?> getRiseCoin() {
 
         ApiResponse apiResponse = ApiResponse.responseMessage(StatusCode.SUCCESS,
                 SuccessCode.RISE_COIN_FINDALL_SUCCESS.getMessage());
-        apiResponse.setData(riseService.getRise(intervals));
+        apiResponse.setData(riseService.getSortChangeRate());
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 }

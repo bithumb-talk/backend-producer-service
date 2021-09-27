@@ -64,6 +64,7 @@ public class QuoteSocket {
             QuoteRequest quoteRequest = new QuoteRequest();
             quoteRequest.setType("ticker");
 
+            //S3에서 불러와야 함.
             quoteRequest.setSymbols(coinService.getMarket());
             quoteRequest.setTickTypes(new String[]{
                     "24H"
@@ -87,10 +88,11 @@ public class QuoteSocket {
         Set key = obj.keySet();
         if (!key.contains("status")){
             QuoteResponse quote = mapper.readValue(msg, QuoteResponse.class);
+            //S3에서 쿼리
             String str = new String((byte[]) hashOperations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
             quote.getContent().setKorean(str);
             System.out.println("getContent"+quote.getContent());
-            zSetOperations.add("rise",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
+            zSetOperations.add("changerate",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
             kafkaTemplate.send(TOPIC,quote.getContent());
         }
     }

@@ -16,8 +16,8 @@ public class RateServiceImpl implements RateService {
     @Resource(name = "redisTemplate")
     private ZSetOperations<String, String> zSetOperations;
     @Override
-    public SortChangedRateResponse[] getRise(String intervals) {
-        Set<ZSetOperations.TypedTuple<String>> rankSet= zSetOperations.reverseRangeWithScores("rise",0,-1);
+    public SortChangedRateResponse[] getSortChangeRate() {
+        Set<ZSetOperations.TypedTuple<String>> rankSet= zSetOperations.reverseRangeWithScores("changerate",0,-1);
         Iterator<ZSetOperations.TypedTuple<String>> iterator = rankSet.iterator();
         SortChangedRateResponse[] riseDtos = new SortChangedRateResponse[rankSet.size()];
         int i;

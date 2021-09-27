@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface RateService {
-    public SortChangedRateResponse[] getRise(String intervals);
+    public SortChangedRateResponse[] getSortChangeRate();
 }
