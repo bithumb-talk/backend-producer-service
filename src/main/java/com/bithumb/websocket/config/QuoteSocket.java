@@ -1,8 +1,8 @@
 package com.bithumb.websocket.config;
 
 import com.bithumb.coin.service.CoinServiceImpl;
-import com.bithumb.websocket.controller.dto.QuoteRequestDto;
-import com.bithumb.websocket.controller.dto.QuoteResponseDto;
+import com.bithumb.websocket.controller.dto.QuoteRequest;
+import com.bithumb.websocket.controller.dto.QuoteResponse;
 import com.bithumb.websocket.domain.Quote;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,12 +17,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -36,7 +34,7 @@ public class QuoteSocket {
     private final CoinServiceImpl coinService;
     private final RedisTemplate redisTemplate;
 
-    private static final String TOPIC = "kafka-spring-producer-coin-test4";
+    private static final String TOPIC = "kafka-spring-producer-coin-test5";
 
     private final CountDownLatch closeLatch = new CountDownLatch(1);;
 
@@ -63,9 +61,10 @@ public class QuoteSocket {
 
         try{
             Future<Void> fut;
-            QuoteRequestDto quoteRequest = new QuoteRequestDto();
+            QuoteRequest quoteRequest = new QuoteRequest();
             quoteRequest.setType("ticker");
 
+            //S3에서 불러와야 함.
             quoteRequest.setSymbols(coinService.getMarket());
             quoteRequest.setTickTypes(new String[]{
                     "24H"
@@ -88,11 +87,12 @@ public class QuoteSocket {
 
         Set key = obj.keySet();
         if (!key.contains("status")){
-            QuoteResponseDto quote = mapper.readValue(msg, QuoteResponseDto.class);
+            QuoteResponse quote = mapper.readValue(msg, QuoteResponse.class);
+            //S3에서 쿼리
             String str = new String((byte[]) hashOperations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
             quote.getContent().setKorean(str);
-//            System.out.println("getContent"+quote.getContent());
-            zSetOperations.add("rise",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
+            System.out.println("getContent"+quote.getContent());
+            zSetOperations.add("changerate",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
             kafkaTemplate.send(TOPIC,quote.getContent());
         }
     }

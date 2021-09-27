@@ -1,30 +1,33 @@
-package com.bithumb.candlestick.controller;
+package com.bithumb.quoteinit.controller;
 
-import com.bithumb.candlestick.service.CandleServiceImpl;
+import com.bithumb.quoteinit.service.QuoteInitServiceImpl;
 import com.bithumb.common.response.ApiResponse;
 import com.bithumb.common.response.StatusCode;
 import com.bithumb.common.response.SuccessCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+
 @Api
 @CrossOrigin(origins = "*", allowCredentials = "false")
 @RestController
-@RequestMapping("/candlestick")
+@RequestMapping("/quote_init")
 @RequiredArgsConstructor
-public class CandleController {
-    private final CandleServiceImpl candleService;
+public class QuoteInitController {
+    private final QuoteInitServiceImpl quoteInitService;
 
-    @GetMapping("{symbol}/{chart_intervals}")
-    public ResponseEntity<?> getCandleStick(@PathVariable(value="symbol") String symbol, @PathVariable(value = "chart_intervals")String chart_intervals) throws JsonProcessingException {
+    @GetMapping
+    public ResponseEntity<?> getQuoteInit() throws JsonProcessingException, UnsupportedEncodingException, ParseException {
 
         ApiResponse apiResponse = ApiResponse.responseMessage(StatusCode.SUCCESS,
-                SuccessCode.CANDLESTICK_FINDALL_SUCCESS.getMessage());
-        apiResponse.setData(candleService.getCandleStick(symbol, chart_intervals));
+                SuccessCode.QUOTE_INIT_FINDALL_SUCCESS.getMessage());
+        apiResponse.setData(quoteInitService.getQuoteInit());
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 }
