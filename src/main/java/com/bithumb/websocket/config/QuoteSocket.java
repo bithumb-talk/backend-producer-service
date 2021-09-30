@@ -1,5 +1,6 @@
 package com.bithumb.websocket.config;
 
+import com.bithumb.coin.domain.Coin;
 import com.bithumb.coin.service.CoinServiceImpl;
 import com.bithumb.websocket.controller.dto.QuoteRequest;
 import com.bithumb.websocket.controller.dto.QuoteResponse;
@@ -20,8 +21,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -64,8 +66,14 @@ public class QuoteSocket {
             QuoteRequest quoteRequest = new QuoteRequest();
             quoteRequest.setType("ticker");
 
-            //S3에서 불러와야 함.
-            quoteRequest.setSymbols(coinService.getMarket());
+            HashMap<String, Coin> coins = coinService.getCoins();
+            int i=0;
+            String[] str = new String[coins.size()];
+            for(String strKey: coins.keySet()){
+                Coin strValue = coins.get(strKey);
+                str[i++] = strValue.getMarket();
+            }
+            quoteRequest.setSymbols(str);
             quoteRequest.setTickTypes(new String[]{
                     "24H"
             });
@@ -78,21 +86,20 @@ public class QuoteSocket {
     }
 
     @OnWebSocketMessage
-    public void onMessage(String msg) throws JsonProcessingException, ParseException, UnsupportedEncodingException {
+    public void onMessage(String msg) throws IOException, ParseException {
         ObjectMapper mapper = new ObjectMapper();
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject)parser.parse(msg);
-        HashOperations hashOperations = redisTemplate.opsForHash();
         ZSetOperations zSetOperations = redisTemplate.opsForZSet();
 
         Set key = obj.keySet();
         if (!key.contains("status")){
+            System.out.println(msg);
             QuoteResponse quote = mapper.readValue(msg, QuoteResponse.class);
-            //S3에서 쿼리
-            String str = new String((byte[]) hashOperations.get(quote.getContent().getSymbol(),quote.getContent().getSymbol()),"UTF-8");
-            quote.getContent().setKorean(str);
-            System.out.println("getContent"+quote.getContent());
+            String korean = coinService.getCoins().get(quote.getContent().getSymbol().split("_")[0]).getKorean();
+            quote.getContent().setKorean(korean);
             zSetOperations.add("changerate",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
+            System.out.println(quote.getContent());
             kafkaTemplate.send(TOPIC,quote.getContent());
         }
     }

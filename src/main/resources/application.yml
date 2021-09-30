@@ -6,4 +6,16 @@ spring:
     name: kafka-producer
 
 server:
-  port: 9090
+  port: 8080
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA2SJCWGIOHZXVYN5I  // 암호키(1)
+      secretKey: KFpI6M/M6TSYVTQt13MFnv9LrdU9QDzR3Kzm2Oc2 // 암호키(2)
+    s3:
+      bucket: youngcha-coin-service  // 버킷이름
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
