@@ -39,3 +39,4 @@ public class CoinServiceImpl implements CoinService {
         return map;
     }
 }
+
