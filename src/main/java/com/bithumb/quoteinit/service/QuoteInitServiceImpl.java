@@ -1,5 +1,6 @@
 package com.bithumb.quoteinit.service;
 
+import com.bithumb.coin.domain.Coin;
 import com.bithumb.coin.service.CoinServiceImpl;
 import com.bithumb.quoteinit.controller.dto.QuoteInitResponse;
 import com.bithumb.quoteinit.controller.dto.QuoteInitBithumbResponse;
@@ -21,21 +22,24 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class QuoteInitServiceImpl implements QuoteInitService {
-    private final CoinServiceImpl coinService;
+//    private final CoinService2Impl coinService;
     private final RedisTemplate redisTemplate;
+    private final CoinServiceImpl coinService;
 
 
     @Override
-    public QuoteInitResponse[] getQuoteInit() throws JsonProcessingException, UnsupportedEncodingException, ParseException {
+    public QuoteInitResponse[] getQuoteInit() throws IOException, ParseException {
         //S3로 대체
-        String[] markets = coinService.getMarket();
+//        String[] markets = coinService.getMarket();
 
         String jsonInString = "";
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
@@ -76,7 +80,9 @@ public class QuoteInitServiceImpl implements QuoteInitService {
             }
 
             //redis -> S3로 변경 해야 함.
-            String korean = new String((byte[]) operation.get(symbol+"_KRW",symbol+"_KRW"),"UTF-8");
+//            String korean = new String((byte[]) operation.get(symbol+"_KRW",symbol+"_KRW"),"UTF-8");
+            HashMap<String, Coin> coins= coinService.getCoins();
+            String korean = coins.get(symbol).getKorean();
             quotes[i].setKorean(korean);
             JSONObject resultObj1 = (JSONObject)jsonParser.parse(values);
             quotes[i].setClosePrice(resultObj1.get("closing_price").toString());

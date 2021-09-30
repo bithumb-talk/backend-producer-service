@@ -7,9 +7,8 @@ import lombok.ToString;
 
 @Data
 @RequiredArgsConstructor
-@EqualsAndHashCode @ToString
-public class Coin {
-    private String symbol;
-    private String korean;
-    private String market;
+@EqualsAndHashCode
+@ToString
+public class CoinDto {
+    private Coin[] data;
 }

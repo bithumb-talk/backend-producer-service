@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Api
@@ -23,7 +24,7 @@ public class QuoteInitController {
     private final QuoteInitServiceImpl quoteInitService;
 
     @GetMapping
-    public ResponseEntity<?> getQuoteInit() throws JsonProcessingException, UnsupportedEncodingException, ParseException {
+    public ResponseEntity<?> getQuoteInit() throws IOException, ParseException {
 
         ApiResponse apiResponse = ApiResponse.responseMessage(StatusCode.SUCCESS,
                 SuccessCode.QUOTE_INIT_FINDALL_SUCCESS.getMessage());
