@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication(scanBasePackages = { "com.bithumb.config","com.bithumb.websocket","com.bithumb.coin", "com.bithumb.changerate"})
+@SpringBootApplication(scanBasePackages = { "com.bithumb.config","com.bithumb.websocket","com.bithumb.coin"})
 public class ProducerApplication {
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(ProducerApplication.class, args);

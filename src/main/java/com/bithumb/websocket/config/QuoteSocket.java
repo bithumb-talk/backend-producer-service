@@ -5,7 +5,6 @@ import com.bithumb.coin.service.CoinServiceImpl;
 import com.bithumb.websocket.controller.dto.QuoteRequest;
 import com.bithumb.websocket.controller.dto.QuoteResponse;
 import com.bithumb.websocket.domain.Quote;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,13 +15,9 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -34,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 public class QuoteSocket {
     private final KafkaTemplate<String, Quote> kafkaTemplate;
     private final CoinServiceImpl coinService;
-    private final RedisTemplate redisTemplate;
 
     private static final String TOPIC = "kafka-spring-producer-coin-test5";
 
@@ -90,15 +84,12 @@ public class QuoteSocket {
         ObjectMapper mapper = new ObjectMapper();
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject)parser.parse(msg);
-        ZSetOperations zSetOperations = redisTemplate.opsForZSet();
 
         Set key = obj.keySet();
         if (!key.contains("status")){
-            System.out.println(msg);
             QuoteResponse quote = mapper.readValue(msg, QuoteResponse.class);
             String korean = coinService.getCoins().get(quote.getContent().getSymbol().split("_")[0]).getKorean();
             quote.getContent().setKorean(korean);
-            zSetOperations.add("changerate",quote.getContent().getKorean(),Double.parseDouble(quote.getContent().getChgRate()));
             System.out.println(quote.getContent());
             kafkaTemplate.send(TOPIC,quote.getContent());
         }

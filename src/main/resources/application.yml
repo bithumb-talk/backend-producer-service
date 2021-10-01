@@ -1,21 +1,28 @@
 spring:
-  redis:
-    host: "host.docker.internal"
-    port: 6379
+#  redis:
+#    host: "host.docker.internal"
+#    port: 6379
   application:
     name: kafka-producer
 
 server:
   port: 8080
-
 cloud:
   aws:
     credentials:
-      accessKey: AKIA2SJCWGIOHZXVYN5I  // 암호키(1)
-      secretKey: KFpI6M/M6TSYVTQt13MFnv9LrdU9QDzR3Kzm2Oc2 // 암호키(2)
+      accessKey: AKIA2SJCWGIOHZXVYN5I
+      secretKey: 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
     s3:
-      bucket: youngcha-coin-service  // 버킷이름
+      bucket: youngcha-coin-service
+      key: coinlist/coin-list.json
     region:
       static: ap-northeast-2
     stack:
       auto: false
+
+property:
+  kafka:
+#    server: localhost:9092
+    server: host.docker.internal:9092
+    topic: kafka-spring-producer-coin-test5
+#    server: host.docker.internal:9092

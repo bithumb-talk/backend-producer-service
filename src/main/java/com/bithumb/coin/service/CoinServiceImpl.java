@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.bithumb.coin.domain.Coin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,16 +20,22 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Service
 public class CoinServiceImpl implements CoinService {
-    public HashMap<String, Coin> getCoins() throws IOException {
-        String bucket_name = "youngcha-coin-service";
-        String key_name = "coinlist/coin-list.json";
-        ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${cloud.aws.s3.bucket}")
+    private String BUCKET_NAME;
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String ACCESS_KEY;
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String SECRET_KEY;
+    @Value("${cloud.aws.s3.key}")
+    private String KEY_NAME;
 
+    public HashMap<String, Coin> getCoins() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
         AmazonS3 s3 = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIA2SJCWGIOHZXVYN5I", "KFpI6M/M6TSYVTQt13MFnv9LrdU9QDzR3Kzm2Oc2")))
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ACCESS_KEY,SECRET_KEY)))
                 .withRegion(Regions.AP_NORTHEAST_2)
                 .build();
-        S3Object o = s3.getObject(bucket_name,key_name);
+        S3Object o = s3.getObject(BUCKET_NAME,KEY_NAME);
         S3ObjectInputStream s3is = o.getObjectContent();
         Coin[] coins = objectMapper.readValue(s3is, Coin[].class);
         HashMap<String, Coin> map = new HashMap<String, Coin>();
@@ -39,4 +46,3 @@ public class CoinServiceImpl implements CoinService {
         return map;
     }
 }
-
