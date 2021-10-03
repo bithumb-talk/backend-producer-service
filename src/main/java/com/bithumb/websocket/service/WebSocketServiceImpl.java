@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class WebSocketServiceImpl implements WebSocketService{
 
-    private String destUri = "wss://pubwss.bithumb.com/pub/ws";
+    @Value("${property.desturi}")
+    private String destUri;
 
     @Autowired
     private final KafkaTemplate<String, Quote> kafkaTemplate;
