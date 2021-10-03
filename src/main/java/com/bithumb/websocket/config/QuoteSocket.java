@@ -5,7 +5,6 @@ import com.bithumb.coin.service.CoinServiceImpl;
 import com.bithumb.websocket.controller.dto.QuoteRequest;
 import com.bithumb.websocket.controller.dto.QuoteResponse;
 import com.bithumb.websocket.domain.Quote;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.websocket.api.Session;
