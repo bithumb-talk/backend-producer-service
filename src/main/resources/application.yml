@@ -21,8 +21,7 @@ cloud:
       auto: false
 
 property:
+  desturi: wss://pubwss.bithumb.com/pub/ws
   kafka:
-#    server: localhost:9092
     server: 3.36.162.130:9092
     topic: kafka-spring-producer-coin-test5
-#    server: host.docker.internal:9092
