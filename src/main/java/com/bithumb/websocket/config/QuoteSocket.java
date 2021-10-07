@@ -79,7 +79,7 @@ public class QuoteSocket {
             QuoteResponse quote = mapper.readValue(msg, QuoteResponse.class);
             String korean = coinService.getCoins().get(quote.getContent().getSymbol().split("_")[0]).getKorean();
             quote.getContent().setKorean(korean);
-            System.out.println(quote.getContent());
+//            System.out.println(quote.getContent());
             kafkaTemplate.send(TOPIC, quote.getContent());
         }
     }
