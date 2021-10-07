@@ -28,7 +28,7 @@ public class QuoteSocket {
     private final KafkaTemplate<String, Quote> kafkaTemplate;
     private final CoinServiceImpl coinService;
 
-    private static final String TOPIC = "kafka-spring-producer-coin-test5";
+    private static final String TOPIC = "youngcha-coin-quote";
 
     private final CountDownLatch closeLatch = new CountDownLatch(1);
 
