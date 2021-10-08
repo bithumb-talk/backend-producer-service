@@ -28,7 +28,7 @@ public class QuoteSocket {
     private final KafkaTemplate<String, Quote> kafkaTemplate;
     private final CoinServiceImpl coinService;
 
-    private static final String TOPIC = "kafka-spring-producer-coin-test5";
+    private static final String TOPIC = "youngcha-coin-quote";
 
     private final CountDownLatch closeLatch = new CountDownLatch(1);
 
@@ -79,7 +79,7 @@ public class QuoteSocket {
             QuoteResponse quote = mapper.readValue(msg, QuoteResponse.class);
             String korean = coinService.getCoins().get(quote.getContent().getSymbol().split("_")[0]).getKorean();
             quote.getContent().setKorean(korean);
-            System.out.println(quote.getContent());
+//            System.out.println(quote.getContent());
             kafkaTemplate.send(TOPIC, quote.getContent());
         }
     }
