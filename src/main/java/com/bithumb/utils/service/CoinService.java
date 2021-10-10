@@ -1,7 +1,7 @@
-package com.bithumb.coin.service;
+package com.bithumb.utils.service;
 
 
-import com.bithumb.coin.domain.Coin;
+import com.bithumb.utils.domain.Coin;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

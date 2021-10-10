@@ -1,4 +1,4 @@
-package com.bithumb.coin.domain;
+package com.bithumb.utils.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

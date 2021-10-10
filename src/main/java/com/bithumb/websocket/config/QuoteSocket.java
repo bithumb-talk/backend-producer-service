@@ -1,7 +1,7 @@
 package com.bithumb.websocket.config;
 
-import com.bithumb.coin.domain.Coin;
-import com.bithumb.coin.service.CoinServiceImpl;
+import com.bithumb.utils.domain.Coin;
+import com.bithumb.utils.service.CoinServiceImpl;
 import com.bithumb.websocket.controller.dto.QuoteRequest;
 import com.bithumb.websocket.controller.dto.QuoteResponse;
 import com.bithumb.websocket.domain.Quote;
