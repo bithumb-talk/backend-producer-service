@@ -1,6 +1,6 @@
 package com.bithumb.websocket.service;
 
-import com.bithumb.coin.service.CoinServiceImpl;
+import com.bithumb.utils.service.CoinServiceImpl;
 import com.bithumb.websocket.config.QuoteSocket;
 import com.bithumb.websocket.domain.Quote;
 import lombok.RequiredArgsConstructor;
