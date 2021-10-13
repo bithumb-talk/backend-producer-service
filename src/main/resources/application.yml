@@ -24,4 +24,4 @@ property:
   desturi: wss://pubwss.bithumb.com/pub/ws
   kafka:
     server: 3.36.162.130:9092
-    topic: youngcha-coin-quote-dev
+    topic: youngcha-coin-quote
